@@ -341,11 +341,17 @@ def gestante_edit():
     try:
         with sqlite3.connect("database.db") as conn:
             c = conn.cursor()
+            c.execute("SELECT nome FROM gestantes WHERE id = ?", (gestante_id,))
+            gestante = c.fetchone()
+            if gestante is None:
+                session.pop("gestante_id", None)
+                flash("Sessão inválida. Faça login novamente.", "error")
+                return redirect(url_for("gestante_login"))
+            gestante_nome = gestante[0]
+
             c.execute("SELECT id, data, horario1, horario2 FROM agendamentos WHERE gestante_id = ? AND data >= ? ORDER BY data",
                       (gestante_id, hoje))
             agendamentos = c.fetchall()
-            c.execute("SELECT nome FROM gestantes WHERE id = ?", (gestante_id,))
-            gestante_nome = c.fetchone()[0]
     except sqlite3.Error as e:
         flash(f"Erro ao carregar agendamentos: {e}", "error")
         agendamentos = []
