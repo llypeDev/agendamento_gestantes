@@ -4,59 +4,144 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Administração de Agendamentos</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="{{ url_for('static', filename='script.js') }}" defer></script>
 </head>
 <body>
-    <div class="container">
-        <h1>Administração de Agendamentos</h1>
-        <a href="{{ url_for('admin_logout') }}" class="admin-link">Sair</a>
+    <header class="main-header">
+        <div class="header-content">
+            <h1><i class="fas fa-user-shield"></i> Administração de Agendamentos</h1>
+            <a href="{{ url_for('admin_logout') }}" class="admin-btn"><i class="fas fa-sign-out-alt"></i> Sair</a>
+        </div>
+    </header>
 
+    <main class="container">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
-                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                    <div class="alert alert-{{ category }}">
+                        <i class="fas fa-{% if category == 'success' %}check{% else %}exclamation{% endif %}-circle"></i> {{ message }}
+                    </div>
                 {% endfor %}
             {% endif %}
         {% endwith %}
 
-        <h2>Todos os Agendamentos</h2>
-        <div class="agendamentos">
-            {% if agendamentos %}
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Gestante</th>
-                            <th>Data</th>
-                            <th>Horário 1</th>
-                            <th>Horário 2</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for agendamento in agendamentos %}
-                            <tr>
-                                <td>{{ agendamento[0] }}</td>
-                                <td>{{ agendamento[1] }}</td>
-                                <td>{{ agendamento[2] }}</td>
-                                <td>{{ agendamento[3] }}</td>
-                                <td>{{ agendamento[4] }}</td>
-                                <td>
-                                    <form method="POST" style="display:inline;">
-                                        <input type="hidden" name="id" value="{{ agendamento[0] }}">
-                                        <input type="hidden" name="action" value="delete">
-                                        <button type="submit" class="btn btn-danger" onclick="return confirm('Tem certeza que deseja excluir?')">Excluir</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            {% else %}
-                <p>Nenhum agendamento cadastrado.</p>
-            {% endif %}
-        </div>
-    </div>
+        <section class="admin-section">
+            <h2><i class="fas fa-user-plus"></i> Cadastrar Gestante</h2>
+            <form method="POST" class="form-grid">
+                <div class="form-group">
+                    <label for="nome"><i class="fas fa-user"></i> Nome</label>
+                    <input type="text" id="nome" name="nome" required placeholder="Nome completo">
+                </div>
+                <div class="form-group">
+                    <label for="setor"><i class="fas fa-building"></i> Setor</label>
+                    <input type="text" id="setor" name="setor" required placeholder="Setor de trabalho">
+                </div>
+                <div class="form-group">
+                    <label for="matricula"><i class="fas fa-id-badge"></i> Matrícula</label>
+                    <input type="text" id="matricula" name="matricula" required placeholder="Matrícula única">
+                </div>
+                <div class="form-group">
+                    <label for="username"><i class="fas fa-user-circle"></i> Usuário</label>
+                    <input type="text" id="username" name="username" required placeholder="Nome de usuário">
+                </div>
+                <div class="form-group">
+                    <label for="password"><i class="fas fa-lock"></i> Senha</label>
+                    <input type="password" id="password" name="password" required placeholder="Senha">
+                </div>
+                <button type="submit" class="submit-btn" name="action" value="register_gestante"><i class="fas fa-save"></i> Cadastrar</button>
+            </form>
+        </section>
+
+        <section class="admin-section">
+            <h2><i class="fas fa-users"></i> Gestantes Cadastradas</h2>
+            <div class="admin-table">
+                {% if gestantes %}
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nome</th>
+                                    <th>Setor</th>
+                                    <th>Matrícula</th>
+                                    <th>Usuário</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for gestante in gestantes %}
+                                    <tr>
+                                        <td>{{ gestante[0] }}</td>
+                                        <td>{{ gestante[1] }}</td>
+                                        <td>{{ gestante[2] }}</td>
+                                        <td>{{ gestante[3] }}</td>
+                                        <td>{{ gestante[4] }}</td>
+                                        <td>
+                                            <a href="{{ url_for('admin_edit_gestante', gestante_id=gestante[0]) }}" class="edit-btn"><i class="fas fa-edit"></i> Editar</a>
+                                            <form method="POST" style="display:inline;">
+                                                <input type="hidden" name="id" value="{{ gestante[0] }}">
+                                                <input type="hidden" name="action" value="delete_gestante">
+                                                <button type="submit" class="delete-btn" onclick="return confirm('Tem certeza que deseja excluir esta gestante e todos os seus agendamentos?')">
+                                                    <i class="fas fa-trash-alt"></i> Excluir
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="no-data"><i class="fas fa-info-circle"></i> Nenhuma gestante cadastrada.</p>
+                {% endif %}
+            </div>
+        </section>
+
+        <section class="admin-section">
+            <h2><i class="fas fa-list-alt"></i> Todos os Agendamentos</h2>
+            <div class="admin-table">
+                {% if agendamentos %}
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Gestante</th>
+                                    <th>Data</th>
+                                    <th>Horário 1</th>
+                                    <th>Horário 2</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for agendamento in agendamentos %}
+                                    <tr>
+                                        <td>{{ agendamento[0] }}</td>
+                                        <td>{{ agendamento[1] }}</td>
+                                        <td>{{ agendamento[2] }}</td>
+                                        <td>{{ agendamento[3] }}</td>
+                                        <td>{{ agendamento[4] }}</td>
+                                        <td>
+                                            <form method="POST" style="display:inline;">
+                                                <input type="hidden" name="id" value="{{ agendamento[0] }}">
+                                                <input type="hidden" name="action" value="delete_agendamento">
+                                                <button type="submit" class="delete-btn" onclick="return confirm('Tem certeza que deseja excluir este agendamento?')">
+                                                    <i class="fas fa-trash-alt"></i> Excluir
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="no-data"><i class="fas fa-info-circle"></i> Nenhum agendamento cadastrado.</p>
+                {% endif %}
+            </div>
+        </section>
+    </main>
 </body>
 </html>

@@ -4,42 +4,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agendamento para Gestantes</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="{{ url_for('static', filename='script.js') }}" defer></script>
 </head>
 <body>
-    <div class="container">
-        <header>
+    <header class="main-header">
+        <div class="header-content">
             <h1><i class="fas fa-calendar-alt"></i> Agendamento para Gestantes</h1>
             <p class="subtitle">Data atual: {{ hoje }}</p>
-            <a href="{{ url_for('admin_login') }}" class="admin-link"><i class="fas fa-user-shield"></i> Área do Administrador</a>
-        </header>
+            <div class="header-actions">
+                {% if is_logged_in %}
+                    <a href="{{ url_for('gestante_edit') }}" class="admin-btn"><i class="fas fa-user-edit"></i> Editar Meus Horários</a>
+                    <a href="{{ url_for('gestante_logout') }}" class="admin-btn" style="background: var(--accent);"><i class="fas fa-sign-out-alt"></i> Sair</a>
+                {% else %}
+                    <a href="{{ url_for('gestante_login') }}" class="admin-btn"><i class="fas fa-user"></i> Login Gestante</a>
+                {% endif %}
+                <a href="{{ url_for('admin_login') }}" class="admin-btn"><i class="fas fa-user-shield"></i> Área do Administrador</a>
+            </div>
+        </div>
+    </header>
 
+    <main class="container">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
-                    <div class="alert alert-{{ category }}"><i class="fas fa-{% if category == 'success' %}check{% else %}exclamation{% endif %}-circle"></i> {{ message }}</div>
+                    <div class="alert alert-{{ category }}">
+                        <i class="fas fa-{% if category == 'success' %}check{% else %}exclamation{% endif %}-circle"></i> {{ message }}
+                    </div>
                 {% endfor %}
             {% endif %}
         {% endwith %}
 
         <section class="form-section">
-            <form method="POST" class="form">
+            <h2><i class="fas fa-plus-circle"></i> Novo Agendamento</h2>
+            <form method="POST" class="form-grid">
                 <div class="form-group">
-                    <label for="gestante"><i class="fas fa-user"></i> Nome da Gestante</label>
-                    <input type="text" id="gestante" name="gestante" required placeholder="Digite seu nome">
-                </div>
-
-                <div class="form-group">
-                    <label for="data"><i class="fas fa-calendar-day"></i> Data do Agendamento</label>
+                    <label for="data"><i class="fas fa-calendar-day"></i> Data</label>
                     <input type="text" id="data" name="data" value="{{ data_selecionada }}" required placeholder="Selecione a data">
                 </div>
-
                 <div class="form-group">
-                    <label for="horario1"><i class="fas fa-clock"></i> Primeiro Horário (45 min)</label>
+                    <label for="horario1"><i class="fas fa-clock"></i> Horário 1 (45 min)</label>
                     <select id="horario1" name="horario1" required>
                         {% for horario in horarios %}
                             <option value="{{ horario }}" {% if horario in horarios_ocupados %}disabled{% endif %}>
@@ -48,9 +55,8 @@
                         {% endfor %}
                     </select>
                 </div>
-
                 <div class="form-group">
-                    <label for="horario2"><i class="fas fa-clock"></i> Segundo Horário (45 min)</label>
+                    <label for="horario2"><i class="fas fa-clock"></i> Horário 2 (45 min)</label>
                     <select id="horario2" name="horario2" required>
                         {% for horario in horarios %}
                             <option value="{{ horario }}" {% if horario in horarios_ocupados %}disabled{% endif %}>
@@ -59,30 +65,30 @@
                         {% endfor %}
                     </select>
                 </div>
-
-                <button type="submit" class="btn"><i class="fas fa-save"></i> Agendar</button>
+                <button type="submit" class="submit-btn"><i class="fas fa-save"></i> Agendar</button>
             </form>
         </section>
 
         <section class="agenda-section">
-            <h2><i class="fas fa-list-alt"></i> Agenda para {{ data_selecionada }}</h2>
-            <div class="agenda">
-                <div class="agenda-table">
-                    {% for horario in horarios %}
-                        <div class="agenda-item {% if horario in horarios_ocupados %}occupied{% else %}free{% endif %}">
-                            <span class="time">{{ horario }}</span>
-                            <span class="gestante">
-                                {% for agendamento in agendamentos %}
-                                    {% if agendamento[1] == horario or agendamento[2] == horario %}
-                                        <i class="fas fa-user-check"></i> {{ agendamento[0] }}
-                                    {% endif %}
-                                {% endfor %}
-                            </span>
-                        </div>
-                    {% endfor %}
-                </div>
+            <h2><i class="fas fa-list-alt"></i> Agenda do Dia - {{ data_selecionada }}</h2>
+            <div class="agenda-grid">
+                {% for horario in horarios %}
+                    <div class="agenda-card {% if horario in horarios_ocupados %}occupied{% else %}free{% endif %}">
+                        <span class="time"><i class="fas fa-clock"></i> {{ horario }}</span>
+                        <span class="status">
+                            {% for agendamento in agendamentos %}
+                                {% if agendamento[1] == horario or agendamento[2] == horario %}
+                                    <i class="fas fa-user-check"></i> {{ agendamento[0] }}
+                                {% endif %}
+                            {% endfor %}
+                            {% if horario not in horarios_ocupados %}
+                                <i class="fas fa-check"></i> Livre
+                            {% endif %}
+                        </span>
+                    </div>
+                {% endfor %}
             </div>
         </section>
-    </div>
+    </main>
 </body>
 </html>
