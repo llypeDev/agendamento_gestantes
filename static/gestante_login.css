@@ -10,11 +10,11 @@
 
 .login-box {
     background: var(--white);
-    padding: 40px;
-    border-radius: 20px;
+    padding: 30px;
+    border-radius: 15px;
     box-shadow: var(--shadow);
     width: 100%;
-    max-width: 450px;
+    max-width: 400px;
     text-align: center;
     transition: var(--transition);
 }
@@ -25,19 +25,19 @@
 
 .login-box h1 {
     color: var(--text-dark);
-    margin-bottom: 30px;
+    margin-bottom: 25px;
     font-size: 2rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 12px;
+    gap: 10px;
     font-weight: 600;
 }
 
 .form-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 15px;
 }
 
 .form-group {
@@ -51,15 +51,15 @@ label {
     margin-bottom: 8px;
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-size: 1.1rem;
+    gap: 6px;
+    font-size: 1rem;
 }
 
 input {
-    padding: 14px;
-    font-size: 1rem;
+    padding: 12px;
+    font-size: 0.95rem;
     border: 2px solid #e2e8f0;
-    border-radius: 10px;
+    border-radius: 8px;
     background: #f7fafc;
     transition: var(--transition);
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
@@ -72,19 +72,20 @@ input:focus {
 }
 
 .submit-btn {
-    padding: 14px;
-    font-size: 1.1rem;
+    padding: 12px 20px;
+    font-size: 1rem;
     background: linear-gradient(135deg, var(--primary), #357abd);
     color: var(--white);
     border: none;
-    border-radius: 10px;
+    border-radius: 8px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 8px;
     transition: var(--transition);
     box-shadow: var(--shadow);
+    width: 100%;
 }
 
 .submit-btn:hover {
@@ -93,14 +94,15 @@ input:focus {
 }
 
 .back-link {
-    margin-top: 20px;
+    margin-top: 15px;
     color: var(--primary);
     text-decoration: none;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 6px;
     font-weight: 500;
+    font-size: 0.9rem;
     transition: var(--transition);
 }
 
@@ -109,24 +111,41 @@ input:focus {
 }
 
 /* Responsividade */
-@media (max-width: 768px) {
+@media (max-width: 600px) {
     .login-box {
-        padding: 30px;
+        padding: 20px;
         max-width: 90%;
+    }
+
+    .login-box h1 {
+        font-size: 1.6rem;
+    }
+
+    label {
+        font-size: 0.9rem;
+    }
+
+    input, .submit-btn {
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+
+    .back-link {
+        font-size: 0.85rem;
     }
 }
 
 @media (max-width: 480px) {
     .login-box h1 {
-        font-size: 1.8rem;
-    }
-
-    .login-box {
-        padding: 20px;
+        font-size: 1.4rem;
     }
 
     input, .submit-btn {
-        font-size: 0.95rem;
-        padding: 12px;
+        padding: 8px;
+        font-size: 0.85rem;
+    }
+
+    .back-link {
+        font-size: 0.8rem;
     }
 }
