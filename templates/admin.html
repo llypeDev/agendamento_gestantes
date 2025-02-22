@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administração de Agendamentos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Administração de Agendamentos</h1>
+        <a href="{{ url_for('admin_logout') }}" class="admin-link">Sair</a>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <h2>Todos os Agendamentos</h2>
+        <div class="agendamentos">
+            {% if agendamentos %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Gestante</th>
+                            <th>Data</th>
+                            <th>Horário 1</th>
+                            <th>Horário 2</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for agendamento in agendamentos %}
+                            <tr>
+                                <td>{{ agendamento[0] }}</td>
+                                <td>{{ agendamento[1] }}</td>
+                                <td>{{ agendamento[2] }}</td>
+                                <td>{{ agendamento[3] }}</td>
+                                <td>{{ agendamento[4] }}</td>
+                                <td>
+                                    <form method="POST" style="display:inline;">
+                                        <input type="hidden" name="id" value="{{ agendamento[0] }}">
+                                        <input type="hidden" name="action" value="delete">
+                                        <button type="submit" class="btn btn-danger" onclick="return confirm('Tem certeza que deseja excluir?')">Excluir</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>Nenhum agendamento cadastrado.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
