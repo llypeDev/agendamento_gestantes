@@ -15,28 +15,38 @@ ADMIN_USERNAME = "admin"
 ADMIN_PASSWORD = "senha123"  # Altere para uma senha segura
 
 def init_db():
-    with sqlite3.connect("database.db") as conn:
-        c = conn.cursor()
-        # Drop tabelas existentes para garantir recriação limpa
-        c.execute("DROP TABLE IF EXISTS agendamentos")
-        c.execute("DROP TABLE IF EXISTS gestantes")
-        # Criar tabela de gestantes
-        c.execute('''CREATE TABLE gestantes
-                     (id INTEGER PRIMARY KEY AUTOINCREMENT,
-                      nome TEXT NOT NULL,
-                      setor TEXT NOT NULL,
-                      matricula TEXT NOT NULL UNIQUE,
-                      username TEXT NOT NULL UNIQUE,
-                      password TEXT NOT NULL)''')
-        # Criar tabela de agendamentos com gestante_id
-        c.execute('''CREATE TABLE agendamentos
-                     (id INTEGER PRIMARY KEY AUTOINCREMENT,
-                      gestante_id INTEGER NOT NULL,
-                      data TEXT NOT NULL,
-                      horario1 TEXT NOT NULL,
-                      horario2 TEXT NOT NULL,
-                      FOREIGN KEY (gestante_id) REFERENCES gestantes(id))''')
-        conn.commit()
+    try:
+        with sqlite3.connect("database.db") as conn:
+            c = conn.cursor()
+            # Verifica se a tabela agendamentos existe
+            c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='agendamentos'")
+            if not c.fetchone():
+                # Criar tabela de agendamentos
+                c.execute('''CREATE TABLE agendamentos
+                             (id INTEGER PRIMARY KEY AUTOINCREMENT,
+                              gestante_id INTEGER NOT NULL,
+                              data TEXT NOT NULL,
+                              horario1 TEXT NOT NULL,
+                              horario2 TEXT NOT NULL,
+                              FOREIGN KEY (gestante_id) REFERENCES gestantes(id))''')
+
+            # Verifica se a tabela gestantes existe
+            c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='gestantes'")
+            if not c.fetchone():
+                # Criar tabela de gestantes
+                c.execute('''CREATE TABLE gestantes
+                             (id INTEGER PRIMARY KEY AUTOINCREMENT,
+                              nome TEXT NOT NULL,
+                              setor TEXT NOT NULL,
+                              matricula TEXT NOT NULL UNIQUE,
+                              username TEXT NOT NULL UNIQUE,
+                              password TEXT NOT NULL)''')
+            conn.commit()
+    except sqlite3.Error as e:
+        print(f"Erro ao inicializar o banco de dados: {e}")
+
+# Chame init_db() aqui para garantir que o banco seja criado ao iniciar
+init_db()
 
 def get_horarios_ocupados(data):
     try:
@@ -367,5 +377,6 @@ def gestante_edit():
                            gestante_nome=gestante_nome)
 
 if __name__ == "__main__":
-    init_db()
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    import os
+    port = int(os.environ.get("PORT", 5000))  # Pega a porta do Render ou usa 5000
+    app.run(debug=True, host="0.0.0.0", port=port)
