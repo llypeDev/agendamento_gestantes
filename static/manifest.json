@@ -1,0 +1,21 @@
+{
+    "name": "Agendamento para Gestantes",
+    "short_name": "Gestantes",
+    "description": "Aplicativo para agendamento de consultas para gestantes",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#f0f4f8",
+    "theme_color": "#4a90e2",
+    "icons": [
+        {
+            "src": "/static/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/static/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
