@@ -4,141 +4,180 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Administração de Agendamentos</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <meta name="theme-color" content="#1e3a8a">
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/static/service-worker.js')
+                    .then(registration => {
+                        console.log('Service Worker registrado com sucesso:', registration);
+                    })
+                    .catch(error => {
+                        console.error('Erro ao registrar o Service Worker:', error);
+                    });
+            });
+        }
+    </script>
     <script src="{{ url_for('static', filename='script.js') }}" defer></script>
 </head>
-<body>
-    <header class="main-header">
-        <div class="header-content">
-            <h1><i class="fas fa-user-shield"></i> Administração de Agendamentos</h1>
-            <a href="{{ url_for('admin_logout') }}" class="admin-btn"><i class="fas fa-sign-out-alt"></i> Sair</a>
+<body class="bg-gray-100 text-gray-800 font-sans">
+    <header class="bg-blue-900 text-white p-4 shadow-lg sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+            <h1 class="text-2xl font-bold flex items-center gap-2">
+                <i class="fas fa-user-shield"></i> Administração
+            </h1>
+            <a href="{{ url_for('admin_logout') }}" class="bg-green-600 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-1 shadow-md hover:bg-green-700 hover:-translate-y-0.5 transition-all duration-200">
+                <i class="fas fa-sign-out-alt"></i> Sair
+            </a>
         </div>
     </header>
 
-    <main class="container">
+    <main class="max-w-4xl mx-auto p-4">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
-                    <div class="alert alert-{{ category }}">
-                        <i class="fas fa-{% if category == 'success' %}check{% else %}exclamation{% endif %}-circle"></i> {{ message }}
+                    <div class="mb-4 p-4 rounded-lg shadow-md {{ 'bg-green-100 text-green-700' if category == 'success' else 'bg-red-100 text-red-700' }} flex items-center gap-2 animate-fade-in">
+                        <i class="fas fa-{{ 'check' if category == 'success' else 'exclamation' }}-circle"></i> {{ message }}
                     </div>
                 {% endfor %}
             {% endif %}
         {% endwith %}
 
-        <section class="admin-section">
-            <h2><i class="fas fa-user-plus"></i> Cadastrar Gestante</h2>
-            <form method="POST" class="form-grid">
+        <section class="bg-white p-6 rounded-xl shadow-md mb-6 hover:-translate-y-1 transition-all duration-200">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                <i class="fas fa-user-plus"></i> Cadastrar Gestante
+            </h2>
+            <form method="POST" class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div class="form-group">
-                    <label for="nome"><i class="fas fa-user"></i> Nome</label>
-                    <input type="text" id="nome" name="nome" required placeholder="Nome completo">
+                    <label for="nome" class="block text-sm font-medium text-gray-700 flex items-center gap-1">
+                        <i class="fas fa-user"></i> Nome
+                    </label>
+                    <input type="text" id="nome" name="nome" required class="w-full p-2 border border-gray-300 rounded-lg bg-gray-50 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none transition-all duration-200">
                 </div>
                 <div class="form-group">
-                    <label for="setor"><i class="fas fa-building"></i> Setor</label>
-                    <input type="text" id="setor" name="setor" required placeholder="Setor de trabalho">
+                    <label for="setor" class="block text-sm font-medium text-gray-700 flex items-center gap-1">
+                        <i class="fas fa-building"></i> Setor
+                    </label>
+                    <input type="text" id="setor" name="setor" required class="w-full p-2 border border-gray-300 rounded-lg bg-gray-50 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none transition-all duration-200">
                 </div>
                 <div class="form-group">
-                    <label for="matricula"><i class="fas fa-id-badge"></i> Matrícula</label>
-                    <input type="text" id="matricula" name="matricula" required placeholder="Matrícula única">
+                    <label for="matricula" class="block text-sm font-medium text-gray-700 flex items-center gap-1">
+                        <i class="fas fa-id-badge"></i> Matrícula
+                    </label>
+                    <input type="text" id="matricula" name="matricula" required class="w-full p-2 border border-gray-300 rounded-lg bg-gray-50 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none transition-all duration-200">
                 </div>
                 <div class="form-group">
-                    <label for="username"><i class="fas fa-user-circle"></i> Usuário</label>
-                    <input type="text" id="username" name="username" required placeholder="Nome de usuário">
+                    <label for="username" class="block text-sm font-medium text-gray-700 flex items-center gap-1">
+                        <i class="fas fa-user-circle"></i> Usuário
+                    </label>
+                    <input type="text" id="username" name="username" required class="w-full p-2 border border-gray-300 rounded-lg bg-gray-50 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none transition-all duration-200">
                 </div>
                 <div class="form-group">
-                    <label for="password"><i class="fas fa-lock"></i> Senha</label>
-                    <input type="password" id="password" name="password" required placeholder="Senha">
+                    <label for="password" class="block text-sm font-medium text-gray-700 flex items-center gap-1">
+                        <i class="fas fa-lock"></i> Senha
+                    </label>
+                    <input type="password" id="password" name="password" required class="w-full p-2 border border-gray-300 rounded-lg bg-gray-50 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none transition-all duration-200">
                 </div>
-                <button type="submit" class="submit-btn" name="action" value="register_gestante"><i class="fas fa-save"></i> Cadastrar</button>
+                <button type="submit" class="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-1 shadow-md hover:from-blue-700 hover:to-blue-800 hover:-translate-y-0.5 transition-all duration-200 col-span-1 sm:col-span-3 w-full max-w-xs mx-auto" name="action" value="register_gestante">
+                    <i class="fas fa-save"></i> Cadastrar
+                </button>
             </form>
         </section>
 
-        <section class="admin-section">
-            <h2><i class="fas fa-users"></i> Gestantes Cadastradas</h2>
-            <div class="admin-table">
+        <section class="bg-white p-6 rounded-xl shadow-md mb-6 hover:-translate-y-1 transition-all duration-200">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                <i class="fas fa-users"></i> Gestantes Cadastradas
+            </h2>
+            <div class="overflow-x-auto rounded-lg shadow-md">
                 {% if gestantes %}
-                    <div class="table-wrapper">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Nome</th>
-                                    <th>Setor</th>
-                                    <th>Matrícula</th>
-                                    <th>Usuário</th>
-                                    <th>Ações</th>
+                    <table class="min-w-full border-collapse">
+                        <thead class="bg-blue-900 text-white">
+                            <tr>
+                                <th class="p-3 text-left font-semibold">ID</th>
+                                <th class="p-3 text-left font-semibold">Nome</th>
+                                <th class="p-3 text-left font-semibold">Setor</th>
+                                <th class="p-3 text-left font-semibold">Matrícula</th>
+                                <th class="p-3 text-left font-semibold">Usuário</th>
+                                <th class="p-3 text-left font-semibold">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for gestante in gestantes %}
+                                <tr class="hover:bg-gray-200 transition-all duration-200">
+                                    <td class="p-3 border-b border-gray-200">{{ gestante[0] }}</td>
+                                    <td class="p-3 border-b border-gray-200">{{ gestante[1] }}</td>
+                                    <td class="p-3 border-b border-gray-200">{{ gestante[2] }}</td>
+                                    <td class="p-3 border-b border-gray-200">{{ gestante[3] }}</td>
+                                    <td class="p-3 border-b border-gray-200">{{ gestante[4] }}</td>
+                                    <td class="p-3 border-b border-gray-200 flex gap-1">
+                                        <a href="{{ url_for('admin_edit_gestante', gestante_id=gestante[0]) }}" class="bg-yellow-500 text-white px-3 py-1 rounded-lg font-medium flex items-center gap-1 shadow-md hover:bg-yellow-600 hover:-translate-y-0.5 transition-all duration-200">
+                                            <i class="fas fa-edit"></i> Editar
+                                        </a>
+                                        <form method="POST" class="inline">
+                                            <input type="hidden" name="id" value="{{ gestante[0] }}">
+                                            <input type="hidden" name="action" value="delete_gestante">
+                                            <button type="submit" class="bg-red-600 text-white px-3 py-1 rounded-lg font-medium flex items-center gap-1 shadow-md hover:bg-red-700 hover:-translate-y-0.5 transition-all duration-200" onclick="return confirm('Tem certeza que deseja excluir esta gestante e todos os seus agendamentos?')">
+                                                <i class="fas fa-trash-alt"></i> Excluir
+                                            </button>
+                                        </form>
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                {% for gestante in gestantes %}
-                                    <tr>
-                                        <td>{{ gestante[0] }}</td>
-                                        <td>{{ gestante[1] }}</td>
-                                        <td>{{ gestante[2] }}</td>
-                                        <td>{{ gestante[3] }}</td>
-                                        <td>{{ gestante[4] }}</td>
-                                        <td>
-                                            <a href="{{ url_for('admin_edit_gestante', gestante_id=gestante[0]) }}" class="edit-btn"><i class="fas fa-edit"></i> Editar</a>
-                                            <form method="POST" style="display:inline;">
-                                                <input type="hidden" name="id" value="{{ gestante[0] }}">
-                                                <input type="hidden" name="action" value="delete_gestante">
-                                                <button type="submit" class="delete-btn" onclick="return confirm('Tem certeza que deseja excluir esta gestante e todos os seus agendamentos?')">
-                                                    <i class="fas fa-trash-alt"></i> Excluir
-                                                </button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 {% else %}
-                    <p class="no-data"><i class="fas fa-info-circle"></i> Nenhuma gestante cadastrada.</p>
+                    <p class="text-center text-gray-500 text-sm p-4 bg-gray-50 rounded-lg flex items-center gap-2">
+                        <i class="fas fa-info-circle"></i> Nenhuma gestante cadastrada.
+                    </p>
                 {% endif %}
             </div>
         </section>
 
-        <section class="admin-section">
-            <h2><i class="fas fa-list-alt"></i> Todos os Agendamentos</h2>
-            <div class="admin-table">
+        <section class="bg-white p-6 rounded-xl shadow-md hover:-translate-y-1 transition-all duration-200">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                <i class="fas fa-list-alt"></i> Agendamentos
+            </h2>
+            <div class="overflow-x-auto rounded-lg shadow-md">
                 {% if agendamentos %}
-                    <div class="table-wrapper">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Gestante</th>
-                                    <th>Data</th>
-                                    <th>Horário 1</th>
-                                    <th>Horário 2</th>
-                                    <th>Ações</th>
+                    <table class="min-w-full border-collapse">
+                        <thead class="bg-blue-900 text-white">
+                            <tr>
+                                <th class="p-3 text-left font-semibold">ID</th>
+                                <th class="p-3 text-left font-semibold">Gestante</th>
+                                <th class="p-3 text-left font-semibold">Data</th>
+                                <th class="p-3 text-left font-semibold">Horário 1</th>
+                                <th class="p-3 text-left font-semibold">Horário 2</th>
+                                <th class="p-3 text-left font-semibold">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for agendamento in agendamentos %}
+                                <tr class="hover:bg-gray-200 transition-all duration-200">
+                                    <td class="p-3 border-b border-gray-200">{{ agendamento[0] }}</td>
+                                    <td class="p-3 border-b border-gray-200">{{ agendamento[1] }}</td>
+                                    <td class="p-3 border-b border-gray-200">{{ agendamento[2] }}</td>
+                                    <td class="p-3 border-b border-gray-200">{{ agendamento[3] }}</td>
+                                    <td class="p-3 border-b border-gray-200">{{ agendamento[4] }}</td>
+                                    <td class="p-3 border-b border-gray-200">
+                                        <form method="POST" class="inline">
+                                            <input type="hidden" name="id" value="{{ agendamento[0] }}">
+                                            <input type="hidden" name="action" value="delete_agendamento">
+                                            <button type="submit" class="bg-red-600 text-white px-3 py-1 rounded-lg font-medium flex items-center gap-1 shadow-md hover:bg-red-700 hover:-translate-y-0.5 transition-all duration-200" onclick="return confirm('Tem certeza que deseja excluir este agendamento?')">
+                                                <i class="fas fa-trash-alt"></i> Excluir
+                                            </button>
+                                        </form>
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                {% for agendamento in agendamentos %}
-                                    <tr>
-                                        <td>{{ agendamento[0] }}</td>
-                                        <td>{{ agendamento[1] }}</td>
-                                        <td>{{ agendamento[2] }}</td>
-                                        <td>{{ agendamento[3] }}</td>
-                                        <td>{{ agendamento[4] }}</td>
-                                        <td>
-                                            <form method="POST" style="display:inline;">
-                                                <input type="hidden" name="id" value="{{ agendamento[0] }}">
-                                                <input type="hidden" name="action" value="delete_agendamento">
-                                                <button type="submit" class="delete-btn" onclick="return confirm('Tem certeza que deseja excluir este agendamento?')">
-                                                    <i class="fas fa-trash-alt"></i> Excluir
-                                                </button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 {% else %}
-                    <p class="no-data"><i class="fas fa-info-circle"></i> Nenhum agendamento cadastrado.</p>
+                    <p class="text-center text-gray-500 text-sm p-4 bg-gray-50 rounded-lg flex items-center gap-2">
+                        <i class="fas fa-info-circle"></i> Nenhum agendamento cadastrado.
+                    </p>
                 {% endif %}
             </div>
         </section>

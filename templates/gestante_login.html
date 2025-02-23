@@ -4,39 +4,62 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login da Gestante</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='gestante_login.css') }}">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <meta name="theme-color" content="#1e3a8a">
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/static/service-worker.js')
+                    .then(registration => {
+                        console.log('Service Worker registrado com sucesso:', registration);
+                    })
+                    .catch(error => {
+                        console.error('Erro ao registrar o Service Worker:', error);
+                    });
+            });
+        }
+    </script>
     <script src="{{ url_for('static', filename='script.js') }}" defer></script>
 </head>
-<body>
-    <div class="login-container">
-        <div class="login-box">
-            <h1><i class="fas fa-lock"></i> Login da Gestante</h1>
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        <div class="alert alert-{{ category }}">
-                            <i class="fas fa-{% if category == 'success' %}check{% else %}exclamation{% endif %}-circle"></i> {{ message }}
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
+<body class="bg-gray-100 text-gray-800 font-sans flex items-center justify-center min-h-screen">
+    <div class="bg-white p-6 rounded-xl shadow-md max-w-md w-full hover:-translate-y-1 transition-all duration-200">
+        <h1 class="text-xl font-bold text-gray-800 mb-4 flex items-center justify-center gap-2">
+            <i class="fas fa-lock"></i> Login Gestante
+        </h1>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="mb-3 p-3 rounded-lg shadow-md {{ 'bg-green-100 text-green-700' if category == 'success' else 'bg-red-100 text-red-700' }} flex items-center gap-2 animate-fade-in">
+                        <i class="fas fa-{{ 'check' if category == 'success' else 'exclamation' }}-circle"></i> {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
 
-            <form method="POST" class="form-grid">
-                <div class="form-group">
-                    <label for="username"><i class="fas fa-user"></i> Usuário</label>
-                    <input type="text" id="username" name="username" required placeholder="Digite seu usuário">
-                </div>
+        <form method="POST" class="grid gap-3">
+            <div class="form-group">
+                <label for="username" class="block text-sm font-medium text-gray-700 flex items-center gap-1">
+                    <i class="fas fa-user"></i> Usuário
+                </label>
+                <input type="text" id="username" name="username" required class="w-full p-2 border border-gray-300 rounded-lg bg-gray-50 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none transition-all duration-200">
+            </div>
 
-                <div class="form-group">
-                    <label for="password"><i class="fas fa-key"></i> Senha</label>
-                    <input type="password" id="password" name="password" required placeholder="Digite sua senha">
-                </div>
+            <div class="form-group">
+                <label for="password" class="block text-sm font-medium text-gray-700 flex items-center gap-1">
+                    <i class="fas fa-key"></i> Senha
+                </label>
+                <input type="password" id="password" name="password" required class="w-full p-2 border border-gray-300 rounded-lg bg-gray-50 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none transition-all duration-200">
+            </div>
 
-                <button type="submit" class="submit-btn"><i class="fas fa-sign-in-alt"></i> Entrar</button>
-            </form>
-            <a href="{{ url_for('index') }}" class="back-link"><i class="fas fa-arrow-left"></i> Voltar à página inicial</a>
-        </div>
+            <button type="submit" class="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-1 shadow-md hover:from-blue-700 hover:to-blue-800 hover:-translate-y-0.5 transition-all duration-200 w-full">
+                <i class="fas fa-sign-in-alt"></i> Entrar
+            </button>
+        </form>
+        <a href="{{ url_for('index') }}" class="block text-blue-600 text-center mt-3 flex items-center justify-center gap-1 font-medium hover:text-blue-700 transition-all duration-200">
+            <i class="fas fa-arrow-left"></i> Voltar
+        </a>
     </div>
 </body>
 </html>
