@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
-    <meta name="theme-color" content="#1e3a8a">
+    <meta name="theme-color" content="#ff6b9c">
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
@@ -23,9 +23,9 @@
     </script>
     <script src="{{ url_for('static', filename='script.js') }}" defer></script>
 </head>
-<body class="bg-gray-100 text-gray-800 font-sans flex items-center justify-center min-h-screen">
+<body class="bg-pink-50 text-gray-700 font-sans flex items-center justify-center min-h-screen">
     <div class="bg-white p-6 rounded-xl shadow-md max-w-md w-full hover:-translate-y-1 transition-all duration-200">
-        <h1 class="text-xl font-bold text-gray-800 mb-4 flex items-center justify-center gap-2">
+        <h1 class="text-xl font-bold text-gray-700 mb-4 flex items-center justify-center gap-2">
             <i class="fas fa-lock"></i> Login do Admin
         </h1>
         {% with messages = get_flashed_messages(with_categories=true) %}
@@ -43,21 +43,21 @@
                 <label for="username" class="block text-sm font-medium text-gray-700 flex items-center gap-1">
                     <i class="fas fa-user"></i> Usuário
                 </label>
-                <input type="text" id="username" name="username" required class="w-full p-2 border border-gray-300 rounded-lg bg-gray-50 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none transition-all duration-200">
+                <input type="text" id="username" name="username" required class="w-full p-2 border border-gray-300 rounded-lg bg-gray-50 focus:border-pink-600 focus:ring-2 focus:ring-pink-100 outline-none transition-all duration-200">
             </div>
 
             <div class="form-group">
                 <label for="password" class="block text-sm font-medium text-gray-700 flex items-center gap-1">
                     <i class="fas fa-key"></i> Senha
                 </label>
-                <input type="password" id="password" name="password" required class="w-full p-2 border border-gray-300 rounded-lg bg-gray-50 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none transition-all duration-200">
+                <input type="password" id="password" name="password" required class="w-full p-2 border border-gray-300 rounded-lg bg-gray-50 focus:border-pink-600 focus:ring-2 focus:ring-pink-100 outline-none transition-all duration-200">
             </div>
 
-            <button type="submit" class="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-1 shadow-md hover:from-blue-700 hover:to-blue-800 hover:-translate-y-0.5 transition-all duration-200 w-full">
+            <button type="submit" class="bg-gradient-to-r from-pink-600 to-pink-700 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-1 shadow-md hover:from-pink-700 hover:to-pink-800 hover:-translate-y-0.5 transition-all duration-200 w-full">
                 <i class="fas fa-sign-in-alt"></i> Entrar
             </button>
         </form>
-        <a href="{{ url_for('index') }}" class="block text-blue-600 text-center mt-3 flex items-center justify-center gap-1 font-medium hover:text-blue-700 transition-all duration-200">
+        <a href="{{ url_for('index') }}" class="block text-pink-600 text-center mt-3 flex items-center justify-center gap-1 font-medium hover:text-pink-700 transition-all duration-200">
             <i class="fas fa-arrow-left"></i> Voltar
         </a>
     </div>

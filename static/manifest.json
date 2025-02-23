@@ -4,8 +4,8 @@
     "description": "Aplicativo para agendamento de consultas para gestantes",
     "start_url": "/",
     "display": "standalone",
-    "background_color": "#f0f4f8",
-    "theme_color": "#4a90e2",
+    "background_color": "#fef2f7",
+    "theme_color": "#ff6b9c",
     "icons": [
         {
             "src": "/static/icon-192x192.png",
